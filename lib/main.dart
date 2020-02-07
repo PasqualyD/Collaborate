@@ -34,16 +34,30 @@ List<String> title = [
   "The Dreaming Moon",
   "Jack the Persian and the Black Castel",
   "Paul and the Pear",
-  "Kit and the Kite"
+  "Kit and the Kite",
+  "Hounted Ground",
+  "Fallen In Love",
+  "The Dreaming Moon",
+  "Jack the Persian and the Black Castel",
+  "Paul and the Pear",
+  "Kit and the Kite",
 ];
 
+
 List<Color> colorList = [
-  Colors.green[50],
-  Colors.green[100],
-  Colors.green[200],
-  Colors.green[300],
-  Colors.green[400],
-  Colors.green[500],
+  Color(0xfff8b195),
+  Color(0xffc06cb4),
+  Color(0xff6c5b7b),
+  Color(0xff355c7d),
+  Color(0xfff67280),
+  Color(0xfff8b195),
+  Color(0xfff8b195),
+  Color(0xffc06cb4),
+  Color(0xff6c5b7b),
+  Color(0xff355c7d),
+  Color(0xfff67280),
+  Color(0xfff8b195),
+
 ];
 
 class _MyPageViewState extends State<MyPageView> {
@@ -63,25 +77,26 @@ class _MyPageViewState extends State<MyPageView> {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Page View'),
-      ),
       body: Container(
         child: Column(
           children: <Widget>[
             Expanded(
               flex: 1,
               child: Container(
+                alignment: Alignment.center,
                   constraints: BoxConstraints.expand(),
-                  color: Colors.amber,
-                  child: Text(currentPage.toString())),
+                  color: Color(0xff2A363B),
+                  child: Text("Current Page: \n " +  currentPage.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30.0,
+                      ))),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(8.0),
                 child: Stack(children: <Widget>[
-                  Container(color: Colors.black54),
                   CardScrollWidget(currentPage),
                   PageView.builder(
                     controller: _pageController,
@@ -97,7 +112,7 @@ class _MyPageViewState extends State<MyPageView> {
             Expanded(
               flex: 1,
               child: Container(
-                color: Colors.red,
+                color: Color(0xff2A363B),
               ),
             ),
           ],
@@ -195,7 +210,7 @@ class CardScrollWidget extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 22.0, vertical: 6.0),
                                 decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
+                                    color: Color(0xff99b898),
                                     borderRadius: BorderRadius.circular(20.0)),
                                 child: Text("Read Later",
                                     style: TextStyle(color: Colors.white)),
