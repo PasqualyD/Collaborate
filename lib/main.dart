@@ -43,7 +43,6 @@ List<String> title = [
   "Kit and the Kite",
 ];
 
-
 List<Color> colorList = [
   Color(0xfff8b195),
   Color(0xffc06cb4),
@@ -57,18 +56,18 @@ List<Color> colorList = [
   Color(0xff355c7d),
   Color(0xfff67280),
   Color(0xfff8b195),
-
 ];
 
 class _MyPageViewState extends State<MyPageView> {
   var currentPage = title.length - 1.0;
+  // var currentPage = 0.0;
 
   int index = 0;
 
   @override
   Widget build(BuildContext context) {
-    PageController _pageController =
-        PageController(initialPage: title.length - 1);
+    PageController _pageController = PageController(initialPage: title.length);
+    PageController _2pageController = PageController(initialPage: title.length);
 
     _pageController.addListener(() {
       setState(() {
@@ -83,32 +82,70 @@ class _MyPageViewState extends State<MyPageView> {
             Expanded(
               flex: 1,
               child: Container(
-                alignment: Alignment.center,
+                  alignment: Alignment.center,
                   constraints: BoxConstraints.expand(),
                   color: Color(0xff2A363B),
-                  child: Text("Current Page: \n " +  currentPage.toString(),
+                  child: Text("Current Page: \n " + currentPage.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 30.0,
                       ))),
             ),
             Expanded(
-              flex: 3,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Stack(children: <Widget>[
-                  CardScrollWidget(currentPage),
-                  PageView.builder(
-                    controller: _pageController,
-                    itemCount: title.length,
-                    reverse: true,
-                    itemBuilder: (context, index) {
-                      return Container();
-                    },
+              flex: 4,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Stack(children: <Widget>[
+                      // CardScrollWidget(currentPage),
+                      CardScrollWidgetRev(currentPage),
+                      PageView.builder(
+                        controller: _pageController,
+                        itemCount: title.length,
+                        reverse: false,
+                        itemBuilder: (context, index) {
+                          return Container();
+                        },
+                      ),
+                    ]),
                   ),
-                ]),
+                  Expanded(
+                    flex: 1,
+                    child: Stack(children: <Widget>[
+                      // CardScrollWidget(currentPage),
+                      CardScrollWidget(currentPage),
+                      PageView.builder(
+                        controller: _2pageController,
+                        itemCount: title.length,
+                        reverse: false,
+                        itemBuilder: (context, index) {
+                          return Container();
+                        },
+                      ),
+                    ]),
+                  ),
+                ],
               ),
             ),
+            // Expanded(
+            //   flex: 2,
+            //   child: Padding(
+            //     padding: EdgeInsets.all(1.0),
+            //     child: Stack(children: <Widget>[
+            //       // CardScrollWidget(currentPage),
+            //       CardScrollWidget(currentPage),
+            //       PageView.builder(
+            //         controller: _2pageController,
+            //         itemCount: title.length,
+            //         reverse: true,
+            //         itemBuilder: (context, index) {
+            //           return Container();
+            //         },
+            //       ),
+            //     ]),
+            //   ),
+            // ),
             Expanded(
               flex: 1,
               child: Container(
@@ -127,7 +164,7 @@ class CardScrollWidget extends StatelessWidget {
 
   var padding = 20.0;
 
-  var verticalInset = 20.0;
+  var verticalInset = 30.0;
 
   CardScrollWidget(this.currentPage);
 
@@ -155,21 +192,21 @@ class CardScrollWidget extends StatelessWidget {
         List<Widget> cardList = new List();
 
         for (var i = 0; i < title.length; i++) {
+          //var delta = i - currentPage;
           var delta = i - currentPage;
 
-          bool isOnRight = delta > 0;
+          bool isOnRight = delta < 0;
 
-          var start = padding +
+          var start = -safeWidth +
               max(
                   primaryCardLeft -
-                      horizontalInset * -delta * (isOnRight ? 15 : 1),
+                      horizontalInset * delta * (isOnRight ? 15 : 1),
                   0.0);
-
-          var cardItem = Positioned.directional(
-            top: padding + verticalInset * max(-delta, 0.0),
-            bottom: padding + verticalInset * max(-delta, 0.0),
-            start: start,
-            textDirection: TextDirection.rtl,
+          print("Start value: " + start.toString());
+          var cardItem = Positioned(
+            top: padding + verticalInset * max(delta, 0.0),
+            bottom: padding + verticalInset * max(delta, 0.0),
+            right: start,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.0),
               child: Container(
@@ -187,37 +224,118 @@ class CardScrollWidget extends StatelessWidget {
                       Container(color: colorList[i]),
                       Align(
                         alignment: Alignment.bottomLeft,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Text(title[i],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15.0,
-                                  )),
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 12.0, bottom: 12.0),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 22.0, vertical: 6.0),
-                                decoration: BoxDecoration(
-                                    color: Color(0xff99b898),
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                child: Text("Read Later",
-                                    style: TextStyle(color: Colors.white)),
-                              ),
-                            )
-                          ],
-                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+          cardList.add(cardItem);
+        }
+
+        return Stack(children: cardList);
+      }),
+    );
+  }
+}
+
+class CardScrollWidgetRev extends StatelessWidget {
+  var currentPage;
+
+  var padding = 20.0;
+
+  var verticalInset = 30.0;
+
+  CardScrollWidgetRev(this.currentPage);
+
+  @override
+  Widget build(BuildContext context) {
+    return new AspectRatio(
+      aspectRatio: widgetAspectRatio,
+      child: LayoutBuilder(builder: (context, contraints) {
+        var width = contraints.maxWidth;
+
+        var height = contraints.maxHeight;
+
+        var safeWidth = width - 2 * padding;
+
+        var safeHeight = height - 2 * padding;
+
+        var heightOfPrimaryCard = safeHeight;
+
+        var widthOfPrimaryCard = heightOfPrimaryCard * cardAspectRatio;
+
+        var primaryCardLeft = safeWidth - widthOfPrimaryCard;
+
+        var horizontalInset = primaryCardLeft / 2;
+
+        List<Widget> cardList = new List();
+
+        for (var i = 0; i < title.length; i++) {
+          //var delta = i - currentPage;
+          var delta = currentPage - i;
+
+          bool isOnRight = delta < 0;
+
+          var start = padding +
+              max(
+                  primaryCardLeft -
+                      horizontalInset * delta * (isOnRight ? 15 : 1),
+                  0.0);
+          print("Start value: " + start.toString());
+          var cardItem = Positioned(
+            top: padding + verticalInset * max(delta, 0.0),
+            bottom: padding + verticalInset * max(delta, 0.0),
+            left: start,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(3.0, 6.0),
+                      blurRadius: 10.0)
+                ]),
+                child: AspectRatio(
+                  aspectRatio: cardAspectRatio,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      Container(color: colorList[i]),
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        // child: Column(
+                        //   //mainAxisSize: MainAxisSize.min,
+                        //   //crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: <Widget>[
+                        //     Padding(
+                        //       padding: EdgeInsets.symmetric(
+                        //           horizontal: 16.0, vertical: 8.0),
+                        //       child: Text(title[i],
+                        //           style: TextStyle(
+                        //             color: Colors.white,
+                        //             fontSize: 15.0,
+                        //           )),
+                        //     ),
+                        //     SizedBox(
+                        //       height: 10.0,
+                        //     ),
+                        //     Padding(
+                        //       padding: const EdgeInsets.only(
+                        //           left: 12.0, bottom: 12.0),
+                        //       child: Container(
+                        //         padding: EdgeInsets.symmetric(
+                        //             horizontal: 22.0, vertical: 6.0),
+                        //         decoration: BoxDecoration(
+                        //             color: Color(0xff99b898),
+                        //             borderRadius: BorderRadius.circular(20.0)),
+                        //         child: Text("Read Later",
+                        //             style: TextStyle(color: Colors.white)),
+                        //       ),
+                        //     )
+                        //   ],
+                        // ),
                       )
                     ],
                   ),
@@ -233,28 +351,6 @@ class CardScrollWidget extends StatelessWidget {
           children: cardList,
         );
       }),
-    );
-  }
-}
-
-class CardScrollWidgetTest extends StatelessWidget {
-  var currentPage;
-
-  CardScrollWidgetTest(this.currentPage);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Text(currentPage.toString()),
-        ),
-      ),
     );
   }
 }
