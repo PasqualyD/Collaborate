@@ -128,24 +128,33 @@ class _MyPageViewState extends State<MyPageView> {
                 ],
               ),
             ),
-            // Expanded(
-            //   flex: 2,
-            //   child: Padding(
-            //     padding: EdgeInsets.all(1.0),
-            //     child: Stack(children: <Widget>[
-            //       // CardScrollWidget(currentPage),
-            //       CardScrollWidget(currentPage),
-            //       PageView.builder(
-            //         controller: _2pageController,
-            //         itemCount: title.length,
-            //         reverse: true,
-            //         itemBuilder: (context, index) {
-            //           return Container();
-            //         },
-            //       ),
-            //     ]),
-            //   ),
-            // ),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.all(1.0),
+                child: Stack(children: <Widget>[
+                  // CardScrollWidget(currentPage),
+                  PageView.builder(
+                    controller: _2pageController,
+                    itemCount: title.length,
+                    reverse: true,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        color: Colors.amber,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            alignment: Alignment.center,
+                            color: Colors.white,
+                            child: Text('Page:' + index.toString()),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ]),
+              ),
+            ),
             Expanded(
               flex: 1,
               child: Container(
